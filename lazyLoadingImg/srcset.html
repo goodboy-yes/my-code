@@ -1,0 +1,124 @@
+<!-- 利用srcset和size属性引入响应式布局 -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lazyLoadImg</title>
+  </head>
+  <body>
+    <div class="content">
+      <!-- sizes用来表示尺寸临界点，这里的sizes属性表述为：表示当屏幕不大于480px时，
+        图片宽度按照500px来计算（计算方式见下一条），当屏幕不大于800px时，图片宽度按照800px来计算，其余屏幕按照1024px来计算。 -->
+
+      <!-- 在普通的PC电脑上，屏幕像素比是1，sizes属性计算值为500px，那么，img的实际宽度为500*1=500w，因此，浏览器会加载500px这张图片。
+在iphone678这类机型中，屏幕像素比是2，sizes属性计算值为500px，那么，img的实际宽度为500*2=1000w，浏览器会加载820w这张图片。 -->
+      <img
+        sizes="(max-width: 480px) 500px, (max-width: 800px) 800px, 1024px"
+        data-src="https://img2.baidu.com/it/u=1775045749,175058170&fm=26&fmt=auto&gp=0.jpg 520w,https://img2.baidu.com/it/u=1814943828,1963988006&fm=26&fmt=auto&gp=0.jpg 820w"
+        alt=""
+      />
+      <img
+        data-src="https://img2.baidu.com/it/u=1814943828,1963988006&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img1.baidu.com/it/u=203441109,23629150&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img1.baidu.com/it/u=3256279806,2378178386&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img0.baidu.com/it/u=132352746,3806142363&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img1.baidu.com/it/u=2188786828,2675095165&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img1.baidu.com/it/u=2208515219,2239175676&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img1.baidu.com/it/u=4110196045,3829597861&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img2.baidu.com/it/u=1461695837,1173481182&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img1.baidu.com/it/u=176348704,1115840826&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img1.baidu.com/it/u=1412035511,4174433019&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img1.baidu.com/it/u=477486741,198192982&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img1.baidu.com/it/u=3134041512,1065006853&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img2.baidu.com/it/u=3721849693,3527783489&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img0.baidu.com/it/u=4229663435,2244480362&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img0.baidu.com/it/u=3373511310,2455710793&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+      <img
+        data-src="https://img0.baidu.com/it/u=4229663435,2244480362&fm=26&fmt=auto&gp=0.jpg"
+        alt=""
+      />
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let lazyImages = [...document.querySelectorAll("img")];
+        if ("IntersectionObserver" in window) {
+          // 创建一个观察函数
+          let lazyImageObserver = new IntersectionObserver((entries) => {
+            //entries：同时发生可见性变化的被观察对象数组
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                // 当前元素可见
+                let lazyImage = entry.target;
+                lazyImage.srcset = lazyImage.dataset.src; // 替换 src URL
+                lazyImageObserver.unobserve(lazyImage); // 解除观察
+              }
+            });
+          });
+          // 对所有需要懒加载的图片进行观察
+          lazyImages.forEach(function (lazyImage) {
+            lazyImageObserver.observe(lazyImage);
+          });
+        } else {
+          alert("您的浏览器不支持 IntersectionObserver");
+        }
+      });
+    </script>
+    <style>
+      .content {
+        width: 100%;
+      }
+      img {
+        width: 40%;
+        height: 200px;
+        margin: 20px;
+        object-fit: contain;
+      }
+    </style>
+  </body>
+</html>

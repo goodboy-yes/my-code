@@ -1,0 +1,82 @@
+<!-- 原生方法，通过判断图片是否在可视区域动态给src赋值 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lazyLoadImg</title>
+</head>
+<body>
+    <div class="content">
+        <img data-src="https://img2.baidu.com/it/u=1775045749,175058170&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img2.baidu.com/it/u=1814943828,1963988006&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img1.baidu.com/it/u=203441109,23629150&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img1.baidu.com/it/u=3256279806,2378178386&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img0.baidu.com/it/u=132352746,3806142363&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img1.baidu.com/it/u=2188786828,2675095165&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img1.baidu.com/it/u=2208515219,2239175676&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img1.baidu.com/it/u=4110196045,3829597861&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img2.baidu.com/it/u=1461695837,1173481182&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img1.baidu.com/it/u=176348704,1115840826&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img1.baidu.com/it/u=1412035511,4174433019&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img1.baidu.com/it/u=477486741,198192982&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img1.baidu.com/it/u=3134041512,1065006853&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img2.baidu.com/it/u=3721849693,3527783489&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img0.baidu.com/it/u=4229663435,2244480362&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img0.baidu.com/it/u=3373511310,2455710793&fm=26&fmt=auto&gp=0.jpg" alt="">
+        <img data-src="https://img0.baidu.com/it/u=4229663435,2244480362&fm=26&fmt=auto&gp=0.jpg" alt="">
+    </div>
+    <script>
+        // 获取所有的图片标签
+        const imgs = document.getElementsByTagName("img");
+        // 获取可视区域的高度（兼容IE低版本）
+        const viewHeight =
+          window.innerHeight || document.documentElement.clientHeight;
+        // num用于统计当前显示到了哪一张图片，避免每次都从第一张图片开始检查是否露出
+        let num = 0;
+      
+        function lazyload() {
+          for (let i = num; i < imgs.length; i++) {
+            // 用可视区域高度减去元素顶部距离可视区域顶部的高度
+            let distance = viewHeight - imgs[i].getBoundingClientRect().top;
+            // 如果可视区域高度大于等于元素顶部距离可视区域顶部的高度，说明元素露出
+            if (distance >= 0) {
+              // 给元素写入真实的src，展示图片
+              imgs[i].src = imgs[i].getAttribute("data-src");
+              // 前i张图片已经加载完毕，下次从第i+1张开始检查是否露出
+              num = i + 1;
+            }
+          }
+        }
+
+        // 防抖函数
+        function debounce(fn,delay){
+            let timer = null;
+            return function(...args){
+                if(timer){return}
+                timer = setTimeout(()=>{
+                    fn.call(this,args)
+                    timer = null
+                },delay)
+            }
+        }
+      
+        // 页面初始化时加载首屏图片
+        window.onload = lazyload;
+        // 监听scroll事件加载图片
+        window.addEventListener('scroll',debounce(lazyload,100))
+      </script>
+    <style>
+        .content{
+            width:100%;
+        }
+        img{
+            width:40%;
+            height:200px;
+            margin:20px;
+            object-fit: contain;
+        }
+    </style>
+</body>
+</html>
