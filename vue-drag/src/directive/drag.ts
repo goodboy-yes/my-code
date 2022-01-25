@@ -5,7 +5,7 @@ type CoordinateRange = [number, number, number, number];
 interface IOptions {
   /** 拖拽范围元素 */
   outerElement?: HTMLElement | string;
-  /** 可拖拽元素 */
+  /** 拖拽点 */
   dragElement?: HTMLElement | string;
   /** 拖拽方式 */
   dragType?: 'position'|'transform';
@@ -67,7 +67,7 @@ export default (app: App<Element>): void => {
     mounted: (el: HTMLElement, binding: DirectiveBinding<IOptions>) => {
       const { onDragStart, onDrag, onDragEnd, dragElement, outerElement, dragType='transform' } = binding.value ?? {};
       const dragRangeElement: HTMLElement = getDom(outerElement) ?? document.body; // 拖拽范围元素
-      let myDragElement: HTMLElement = getDom(dragElement) ?? el; // 可拖拽的元素
+      let myDragElement: HTMLElement = getDom(dragElement) ?? el; // 拖拽点
       myDragElement.style.cursor = 'move';
       myDragElement.style.userSelect = 'none';
       if(dragType==='position'){
